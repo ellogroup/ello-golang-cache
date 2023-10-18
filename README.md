@@ -57,6 +57,9 @@ func (f ExampleOnDemandFetcher) FetchByKey(ctx context.Context, k int) (string, 
 // Create RecordCache and set the on demand fetcher with a ttl of 1 hour (if the requested item was previous cached 
 // longer than an hour ago, it will be fetched again)
 c := cache.NewRecordCache[int, string](driver).SetOnDemandFetcher(&ExampleOnDemandFetcher{}, 60 * time.Minute)
+
+// Get value
+val, err := c.Get(ctx, key)
 ```
 
 #### AsyncFetcher interface
@@ -75,6 +78,9 @@ func (f ExampleAsyncFetcher) FetchAll(ctx context.Context) (map[int]string, erro
 
 // Create RecordCache and set the async fetcher with a ttl of 1 hour (the fetcher will be called every 1 hour)
 c := cache.NewRecordCache[int, string](driver).SetAsyncFetcher(&ExampleAsyncFetcher{}, 60 * time.Minute)
+
+// Get value
+val, err := c.Get(ctx, key)
 ```
 
 ## Keyless Record Cache
@@ -106,5 +112,5 @@ c := cache.NewKeylessRecordCacheAsync[string](
     60 * time.Minute,
 )
 // Get value
-val := c.Get(ctx)
+val, err := c.Get(ctx)
 ```
