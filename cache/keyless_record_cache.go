@@ -38,18 +38,18 @@ type KeylessRecordCache[V any] struct {
 	*RecordCache[int, V]
 }
 
-func NewKeylessRecordCacheOnDemand[V any](driver driver.CacheDriver[int, RecordCacheItem[V]], f KeylessFetcher[V], ttl time.Duration) *KeylessRecordCache[V] {
+func NewKeylessRecordCacheOnDemand[V any](driver driver.Cache[int, RecordCacheItem[V]], f KeylessFetcher[V], ttl time.Duration) *KeylessRecordCache[V] {
 	return &KeylessRecordCache[V]{NewRecordCache[int, V](driver).SetOnDemandFetcher(newOnDemandFetcher(f), ttl)}
 }
 
-func NewKeylessRecordCacheAsync[V any](driver driver.CacheDriver[int, RecordCacheItem[V]], f KeylessFetcher[V], ttl time.Duration) *KeylessRecordCache[V] {
+func NewKeylessRecordCacheAsync[V any](driver driver.Cache[int, RecordCacheItem[V]], f KeylessFetcher[V], ttl time.Duration) *KeylessRecordCache[V] {
 	return &KeylessRecordCache[V]{
 		NewRecordCache[int, V](driver).
 			SetAsyncFetcher(newAsyncFetcher(f), ttl),
 	}
 }
 
-func NewKeylessRecordCacheAsyncWithLogger[V any](driver driver.CacheDriver[int, RecordCacheItem[V]], f KeylessFetcher[V], ttl time.Duration, log *zap.Logger) *KeylessRecordCache[V] {
+func NewKeylessRecordCacheAsyncWithLogger[V any](driver driver.Cache[int, RecordCacheItem[V]], f KeylessFetcher[V], ttl time.Duration, log *zap.Logger) *KeylessRecordCache[V] {
 	return &KeylessRecordCache[V]{
 		NewRecordCache[int, V](driver).
 			AddLogger(log).

@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func newCacheStub() driver.CacheDriver[string, RecordCacheItem[int]] {
+func newCacheStub() driver.Cache[string, RecordCacheItem[int]] {
 	c := driver.NewMemoryCache[string, RecordCacheItem[int]]()
 
 	c.Set(context.Background(), "active1", RecordCacheItem[int]{V: 1, T: time.Now().Add(time.Hour * 1)})

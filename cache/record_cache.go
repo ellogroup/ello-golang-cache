@@ -9,20 +9,20 @@ import (
 	"time"
 )
 
-// RecordCache for a detailed explanation of the below, RecordCacheItem, KeylessRecordCache and driver.CacheDriver
+// RecordCache for a detailed explanation of the below, RecordCacheItem, KeylessRecordCache and driver.Cache
 // please see https://ellogroup.atlassian.net/wiki/spaces/EP/pages/12648450/Cache+Package
 type RecordCache[K comparable, V any] struct {
 	log             *zap.Logger
 	onDemandFetcher OnDemandFetcher[K, V]
 	asyncFetcher    AsyncFetcher[K, V]
-	cache           driver.CacheDriver[K, RecordCacheItem[V]]
+	cache           driver.Cache[K, RecordCacheItem[V]]
 	recordTtl       time.Duration
 	allTtl          time.Duration
 	lastUpdated     time.Time
 	cron            *cron.Cron
 }
 
-func NewRecordCache[K comparable, V any](cache driver.CacheDriver[K, RecordCacheItem[V]]) *RecordCache[K, V] {
+func NewRecordCache[K comparable, V any](cache driver.Cache[K, RecordCacheItem[V]]) *RecordCache[K, V] {
 	return &RecordCache[K, V]{
 		cache: cache,
 		log:   zap.NewNop(),

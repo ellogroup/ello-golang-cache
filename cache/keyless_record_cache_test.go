@@ -82,7 +82,7 @@ func (m *mockFetcherError) Fetch(_ context.Context) (string, error) {
 
 func TestNewKeylessRecordCacheOnDemand(t *testing.T) {
 	type args struct {
-		driver driver.CacheDriver[int, RecordCacheItem[string]]
+		driver driver.Cache[int, RecordCacheItem[string]]
 		f      KeylessFetcher[string]
 		ttl    time.Duration
 	}
@@ -131,7 +131,7 @@ func TestNewKeylessRecordCacheOnDemand(t *testing.T) {
 
 func TestNewKeylessRecordCacheAsync(t *testing.T) {
 	type args struct {
-		driver driver.CacheDriver[int, RecordCacheItem[string]]
+		driver driver.Cache[int, RecordCacheItem[string]]
 		f      KeylessFetcher[string]
 		ttl    time.Duration
 	}

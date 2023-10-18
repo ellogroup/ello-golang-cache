@@ -2,7 +2,7 @@ package driver
 
 import "context"
 
-type CacheDriver[K comparable, V any] interface {
+type Cache[K comparable, V any] interface {
 	Has(ctx context.Context, key K) bool
 	Get(ctx context.Context, k K) (V, bool)
 	All(ctx context.Context) map[K]V
