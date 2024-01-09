@@ -121,7 +121,7 @@ func (r *RecordCache[K, V]) refreshCache() {
 		r.removeStale()
 	}
 	if r.asyncFetcher != nil &&
-		(r.lastUpdated.IsZero() || r.lastUpdated.Before(time.Now().Truncate(asyncCacheCheckFrequency).Add(-1*r.allTtl))) {
+		(r.lastUpdated.IsZero() || !r.lastUpdated.After(time.Now().Truncate(asyncCacheCheckFrequency).Add(-1*r.allTtl))) {
 		r.refreshAllRecords()
 		r.lastUpdated = time.Now().Truncate(asyncCacheCheckFrequency)
 	}
