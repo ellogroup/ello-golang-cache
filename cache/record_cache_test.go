@@ -176,7 +176,7 @@ func TestRecordCache_SetAsyncFetcher(t *testing.T) {
 		{
 			name: "error when records added to cache is Stale",
 			args: args{
-				ttl: -20 * time.Second,
+				ttl: -70 * time.Second,
 				k:   "active2",
 			},
 			want:    0,

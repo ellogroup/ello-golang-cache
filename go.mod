@@ -1,6 +1,6 @@
 module github.com/ellogroup/ello-golang-cache
 
-go 1.21.3
+go 1.21.5
 
 require (
 	github.com/go-redis/redismock/v9 v9.2.0

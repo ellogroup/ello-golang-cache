@@ -9,6 +9,10 @@ import (
 	"time"
 )
 
+// asyncCacheCheckFrequency is how often we check whether the async cache needs refreshing. It is necessary to know this
+// gap in order to provide a grace period for checking stale records.
+const asyncCacheCheckFrequency = 1 * time.Minute
+
 // RecordCache for a detailed explanation of the below, RecordCacheItem, KeylessRecordCache and driver.Cache
 // please see https://ellogroup.atlassian.net/wiki/spaces/EP/pages/12648450/Cache+Package
 type RecordCache[K comparable, V any] struct {
@@ -67,7 +71,7 @@ func (r *RecordCache[K, V]) refreshAllRecordsEvery(ttl time.Duration) *RecordCac
 func (r *RecordCache[K, V]) needRefreshing(k K) bool {
 	v, ok := r.cache.Get(context.Background(), k)
 	if r.onDemandFetcher == nil {
-		return !ok || v.IsStale(r.allTtl)
+		return !ok || v.IsStale(r.allTtl+asyncCacheCheckFrequency)
 	}
 	return !ok || v.IsStale(r.recordTtl)
 }
@@ -117,9 +121,9 @@ func (r *RecordCache[K, V]) refreshCache() {
 		r.removeStale()
 	}
 	if r.asyncFetcher != nil &&
-		(r.lastUpdated.IsZero() || r.lastUpdated.Before(time.Now().Add(-1*r.allTtl))) {
+		(r.lastUpdated.IsZero() || r.lastUpdated.Before(time.Now().Truncate(asyncCacheCheckFrequency).Add(-1*r.allTtl))) {
 		r.refreshAllRecords()
-		r.lastUpdated = time.Now()
+		r.lastUpdated = time.Now().Truncate(asyncCacheCheckFrequency)
 	}
 }
 
