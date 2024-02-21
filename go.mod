@@ -1,12 +1,12 @@
 module github.com/ellogroup/ello-golang-cache
 
-go 1.21.5
+go 1.22
 
 require (
 	github.com/go-redis/redismock/v9 v9.2.0
-	github.com/redis/go-redis/v9 v9.2.1
+	github.com/redis/go-redis/v9 v9.5.1
 	github.com/robfig/cron/v3 v3.0.1
-	go.uber.org/zap v1.26.0
+	go.uber.org/zap v1.27.0
 )
 
 require (
