@@ -15,13 +15,13 @@ func TestMemCache_Get(t *testing.T) {
 	past := time.Date(2025, time.January, 5, 12, 0, 0, 0, time.Local)
 	now := time.Date(2025, time.January, 10, 12, 0, 0, 0, time.Local)
 	future := time.Date(2025, time.January, 15, 12, 0, 0, 0, time.Local)
-	expFuture := future.Sub(now)
+	ttlFuture := future.Sub(now)
 	sysClock = clock.NewFixed(now)
 
 	type args[K comparable, V any] struct {
 		k   K
 		fn  func() (V, error)
-		exp time.Duration
+		ttl time.Duration
 	}
 	type testCase[K comparable, V any] struct {
 		name    string
@@ -38,7 +38,7 @@ func TestMemCache_Get(t *testing.T) {
 			args: args[string, int]{
 				k:   "test",
 				fn:  func() (int, error) { return 0, nil },
-				exp: expFuture,
+				ttl: ttlFuture,
 			},
 			want:    123,
 			wantM:   map[string]*Item[int]{"test": {val: 123}},
@@ -50,7 +50,7 @@ func TestMemCache_Get(t *testing.T) {
 			args: args[string, int]{
 				k:   "test",
 				fn:  func() (int, error) { return 0, nil },
-				exp: expFuture,
+				ttl: ttlFuture,
 			},
 			want:    123,
 			wantM:   map[string]*Item[int]{"test": {val: 123, exp: future}},
@@ -62,7 +62,7 @@ func TestMemCache_Get(t *testing.T) {
 			args: args[string, int]{
 				k:   "test",
 				fn:  func() (int, error) { return 123, nil },
-				exp: expFuture,
+				ttl: ttlFuture,
 			},
 			want:    123,
 			wantM:   map[string]*Item[int]{"test": {val: 123, exp: future}},
@@ -74,7 +74,7 @@ func TestMemCache_Get(t *testing.T) {
 			args: args[string, int]{
 				k:   "test",
 				fn:  func() (int, error) { return 123, nil },
-				exp: expFuture,
+				ttl: ttlFuture,
 			},
 			want:    123,
 			wantM:   map[string]*Item[int]{"test": {val: 123, exp: future}},
@@ -86,7 +86,7 @@ func TestMemCache_Get(t *testing.T) {
 			args: args[string, int]{
 				k:   "another-test",
 				fn:  func() (int, error) { return 456, nil },
-				exp: NoExpire,
+				ttl: NoExpire,
 			},
 			want:    456,
 			wantM:   map[string]*Item[int]{"test": {val: 123}, "another-test": {val: 456}},
@@ -98,7 +98,7 @@ func TestMemCache_Get(t *testing.T) {
 			args: args[string, int]{
 				k:   "another-test",
 				fn:  func() (int, error) { return 456, nil },
-				exp: expFuture,
+				ttl: ttlFuture,
 			},
 			want:    456,
 			wantM:   map[string]*Item[int]{"test": {val: 123}, "another-test": {val: 456, exp: future}},
@@ -110,7 +110,7 @@ func TestMemCache_Get(t *testing.T) {
 			args: args[string, int]{
 				k:   "another-test",
 				fn:  func() (int, error) { return 0, errFn },
-				exp: NoExpire,
+				ttl: NoExpire,
 			},
 			want:  0,
 			wantM: map[string]*Item[int]{"test": {val: 123}},
@@ -124,12 +124,12 @@ func TestMemCache_Get(t *testing.T) {
 			sut := &Memory[string, int]{
 				m: tt.m,
 			}
-			got, err := sut.Get(tt.args.k, tt.args.fn, tt.args.exp)
-			if !tt.wantErr(t, err, fmt.Sprintf("Get(%v, <func>, %v)", tt.args.k, tt.args.exp)) {
+			got, err := sut.Get(tt.args.k, tt.args.fn, tt.args.ttl)
+			if !tt.wantErr(t, err, fmt.Sprintf("Get(%v, <func>, %v)", tt.args.k, tt.args.ttl)) {
 				return
 			}
-			assert.Equalf(t, tt.want, got, "Get(%v, <func>, %v)", tt.args.k, tt.args.exp)
-			assert.Equalf(t, tt.wantM, sut.m, "Get(%v, <func>, %v)", tt.args.k, tt.args.exp)
+			assert.Equalf(t, tt.want, got, "Get(%v, <func>, %v)", tt.args.k, tt.args.ttl)
+			assert.Equalf(t, tt.wantM, sut.m, "Get(%v, <func>, %v)", tt.args.k, tt.args.ttl)
 		})
 	}
 }

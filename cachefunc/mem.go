@@ -17,7 +17,7 @@ func NewMemory[K comparable, V any]() CacheFunc[K, V] {
 	return c
 }
 
-func (c *Memory[K, V]) Get(k K, fn func() (V, error), exp time.Duration) (V, error) {
+func (c *Memory[K, V]) Get(k K, fn func() (V, error), ttl time.Duration) (V, error) {
 	if i, ok := c.read(k); ok && !i.Expired() {
 		// found in cache
 		return i.val, nil
@@ -26,7 +26,7 @@ func (c *Memory[K, V]) Get(k K, fn func() (V, error), exp time.Duration) (V, err
 	v, err := fn()
 	if err == nil {
 		// only cache if no error
-		c.write(k, NewItemExpiresIn(v, exp))
+		c.write(k, NewItemWithTTL(v, ttl))
 	}
 	// return value
 	return v, err
