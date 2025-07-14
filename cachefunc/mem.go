@@ -5,11 +5,13 @@ import (
 	"time"
 )
 
+// Memory is a memory based implementation of CacheFunc. Items are stored in a map.
 type Memory[K comparable, V any] struct {
 	m     map[K]*Item[V]
 	mutex sync.RWMutex
 }
 
+// NewMemory returns a new instance of Memory
 func NewMemory[K comparable, V any]() CacheFunc[K, V] {
 	c := &Memory[K, V]{
 		m: make(map[K]*Item[V]),

@@ -90,7 +90,7 @@ memCache := cachefunc.NewMemory[int, string]()
 
 #### Nop
 
-Returns a nop implementation, which always calls the provided func. Useful for tests.
+Returns a no-operation implementation, which always calls the provided func. Useful for tests.
 
 ```go
 nopCache := cachefunc.NewNop[int, string]()

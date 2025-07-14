@@ -4,8 +4,10 @@ import (
 	"time"
 )
 
+// Nop is a a no-operation implementation of CacheFunc
 type Nop[K comparable, V any] struct{}
 
+// NewNop returns a new instance of Nop
 func NewNop[K comparable, V any]() CacheFunc[K, V] {
 	return &Nop[K, V]{}
 }
