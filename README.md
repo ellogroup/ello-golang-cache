@@ -60,6 +60,16 @@ func getUser(id int) (user, error) {
 }
 ```
 
+### Interface
+
+The `CacheFunc` interface contains the method to cache the result of func `fn` for key `k`.
+
+```go
+type CacheFunc[K comparable, V any] interface {
+    Get(k K, fn func() (V, error), ttl time.Duration) (V, error)
+}
+```
+
 ### Implementations
 
 #### Default
