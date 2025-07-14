@@ -1,13 +1,3 @@
-# Ello Go cache packages
-
-## CacheFunc
-
-`cachefunc` allows the result of a function to be cached, and will only call the function when the cached item does not 
-exist or needs to be refreshed.
-
-### Usage
-
-```go
 package main
 
 import (
@@ -58,30 +48,3 @@ func getUser(id int) (user, error) {
 		return user{}, errors.New("user not found")
 	}, time.Hour) // Sets duration of cached items to 1 hour
 }
-```
-
-### Implementations
-
-#### Default
-
-The default implementation is Memory. See below.
-
-```go
-cache := cachefunc.New[int, string]()
-```
-
-#### Memory
-
-Returns an in-memory implementation, which stores items in a map.
-
-```go
-memCache := cachefunc.NewMemory[int, string]()
-```
-
-#### Nop
-
-Returns a nop implementation, which always calls the provided func. Useful for tests.
-
-```go
-nopCache := cachefunc.NewNop[int, string]()
-```
